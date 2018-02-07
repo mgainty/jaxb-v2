@@ -249,6 +249,42 @@
                     </execution>
                 </executions>
             </plugin>
+           	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+                 		<executions>
+                 		       <execution>
+                 		           <id>jaxb.version</id>
+                 		           <phase>prepare-package</phase>
+                            		   <goals>
+                            			<goal>shade</goal>
+                            		   </goals>
+					   <configuration>
+       						<artifactSet>
+       					         <includes>
+       					           <include>*</include>
+       					         </includes>
+       					         <excludes>
+       					           <!-- Exclude main jar to avoid error 'Failed to create shaded artifact, project main artifact does not exist' -->
+       					           <exclude>${project.groupId}:${project.artifactId}</exclude>
+       					         </excludes>
+       					       </artifactSet>					   
+						<relocations>
+						  <includes>
+						    <pattern>org.kohsuke.rngom.digested</pattern>
+						    <shadedPattern>com.sun.xml.internal.rngom.digested</shadedPattern>
+						  </includes>
+					       </relocations>			       
+					       <createDependencyReducedPom>false</createDependencyReducedPom>
+					       <createSourcesJar>true</createSourcesJar>
+					       <dependencyReducedPomLocation>${basedir}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+					       <finalName>rngom-shaded</finalName>
+					       <outputDirectory>${project.build.directory}</outputDirectory>
+                              		   </configuration>
+                              		</execution>
+                              	</executions>
+			</plugin> 
         </plugins>
     </build>
 
